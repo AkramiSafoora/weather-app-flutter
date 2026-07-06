@@ -15,7 +15,7 @@ class WeatherPage extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: Column(
         
-            children: const [
+            children: [
 
               Icon(
                 Icons.wb_sunny,
@@ -51,6 +51,55 @@ class WeatherPage extends StatelessWidget {
                   color: Colors.grey,
                 ),
               ),
+              const SizedBox(height: 30),
+
+              Card(
+                  elevation: 4,
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                         Row(
+                            children: const [
+                              Icon(Icons.water_drop, color: Colors.blue),
+                                SizedBox(width: 10),
+                                Text("Humidity"),
+                                Spacer(),
+                                Text("65%"),
+                            ],
+                         ),
+
+                        SizedBox(height: 15),
+
+                        Row(
+                          children: const [
+                            Icon(Icons.air, color: Colors.grey),
+                            SizedBox(width: 10),
+                            Text("Wind"),
+                            Spacer(),
+                            Text("18 km/h"),
+                          ],
+                        ),
+
+                        SizedBox(height: 15),
+
+                        Row(
+                          children: const [
+                            Icon(Icons.thermostat, color: Colors.red),
+                            SizedBox(width: 10),
+                            Text("Feels Like"),
+                            Spacer(),
+                            Text("27°C"),
+                          ],
+                        ),
+                      ],
+                        
+                    ),
+                  ),
+                ),
+            
+
+        
 
             ],
           ),
