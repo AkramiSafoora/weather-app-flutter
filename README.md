@@ -1,8 +1,10 @@
-# Flutter Weather App
+# 🌤️ Flutter Weather App
 
-A simple Flutter weather application using the OpenWeather API.
+A modern Flutter weather application that fetches real-time weather data using the OpenWeather API.
 
-## Features
+---
+
+## 📱 Features
 
 - Search weather by city
 - Current temperature
@@ -10,20 +12,88 @@ A simple Flutter weather application using the OpenWeather API.
 - Humidity
 - Wind speed
 - Weather condition
+- Weather icon
+- Refresh weather data
 
-## Getting Started
+---
 
-1. Get a free API key from OpenWeather.
-2. Open:
+## 🛠️ Built With
 
-lib/services/weather_service.dart
+- Flutter
+- Dart
+- REST API
+- HTTP Package
+- OpenWeather API
 
-3. Replace:
+---
 
-```dart
-YOUR_API_KEY_HERE
+## 📂 Project Structure
+
+```
+lib/
+│
+├── models/
+│
+├── screens/
+│     weather_page.dart
+│
+├── services/
+│     weather_service.dart
+│
+├── widgets/
+│
+└── main.dart
 ```
 
-with your own API key.
+---
 
-4. Run the project.
+## 🚀 Getting Started
+
+Clone the project
+
+```bash
+git clone https://github.com/AkramiSafoora/weather-app-flutter.git
+```
+
+Install packages
+
+```bash
+flutter pub get
+```
+
+Run the application using your own OpenWeather API key:
+
+```bash
+flutter run --dart-define=OPENWEATHER_API_KEY=YOUR_API_KEY
+```
+
+---
+
+## 🔑 API Key
+
+This project does **not** include an API key.
+
+Create a free API key from:
+
+https://openweathermap.org/api
+
+Then run the app using:
+
+```bash
+flutter run --dart-define=OPENWEATHER_API_KEY=YOUR_API_KEY
+```
+
+---
+
+## 📸 Screenshots
+
+Coming Soon
+
+---
+
+## 👩‍💻 Author
+
+**Safoora Akrami**
+
+GitHub:
+https://github.com/AkramiSafoora
