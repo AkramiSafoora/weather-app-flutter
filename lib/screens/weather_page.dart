@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 import '../widgets/weather_info_row.dart';
+import '../services/weather_service.dart';
 
-class WeatherPage extends StatelessWidget {
+class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
 
+  @override
+  State<WeatherPage> createState() => _WeatherPageState();
+}
+
+class _WeatherPageState extends State<WeatherPage> {
+@override
+void initState() {
+  super.initState();
+
+  WeatherService().getWeather();
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
