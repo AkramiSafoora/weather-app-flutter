@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class WeatherService {
-  final String apiKey = 'YOUR_API_KEY_HERE';
+  static const String apiKey =
+      String.fromEnvironment('OPENWEATHER_API_KEY');
 
   Future<Map<String, dynamic>> getWeather(String city) async {
     final url = Uri.parse(
@@ -14,7 +15,7 @@ class WeatherService {
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
-      throw Exception('Failed to load weather data');
+      throw Exception(response.body);
     }
   }
 }
