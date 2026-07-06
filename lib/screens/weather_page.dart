@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/weather_info_row.dart';
 
 class WeatherPage extends StatelessWidget {
   const WeatherPage({super.key});
@@ -14,18 +15,16 @@ class WeatherPage extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
-        
             children: [
-
-              Icon(
+              const Icon(
                 Icons.wb_sunny,
                 size: 100,
                 color: Colors.orange,
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-              Text(
+              const Text(
                 "Toronto",
                 style: TextStyle(
                   fontSize: 32,
@@ -33,74 +32,61 @@ class WeatherPage extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
-              Text(
+              const Text(
                 "24°C",
                 style: TextStyle(
                   fontSize: 52,
                 ),
               ),
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
-              Text(
+              const Text(
                 "Partly Cloudy",
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.grey,
                 ),
               ),
+
               const SizedBox(height: 30),
 
               Card(
-                  elevation: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                         Row(
-                            children: const [
-                              Icon(Icons.water_drop, color: Colors.blue),
-                                SizedBox(width: 10),
-                                Text("Humidity"),
-                                Spacer(),
-                                Text("65%"),
-                            ],
-                         ),
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children: const [
+                      WeatherInfoRow(
+                        icon: Icons.water_drop,
+                        title: "Humidity",
+                        value: "65%",
+                        iconColor: Colors.blue,
+                      ),
 
-                        SizedBox(height: 15),
+                      SizedBox(height: 15),
 
-                        Row(
-                          children: const [
-                            Icon(Icons.air, color: Colors.grey),
-                            SizedBox(width: 10),
-                            Text("Wind"),
-                            Spacer(),
-                            Text("18 km/h"),
-                          ],
-                        ),
+                      WeatherInfoRow(
+                        icon: Icons.air,
+                        title: "Wind",
+                        value: "18 km/h",
+                        iconColor: Colors.grey,
+                      ),
 
-                        SizedBox(height: 15),
+                      SizedBox(height: 15),
 
-                        Row(
-                          children: const [
-                            Icon(Icons.thermostat, color: Colors.red),
-                            SizedBox(width: 10),
-                            Text("Feels Like"),
-                            Spacer(),
-                            Text("27°C"),
-                          ],
-                        ),
-                      ],
-                        
-                    ),
+                      WeatherInfoRow(
+                        icon: Icons.thermostat,
+                        title: "Feels Like",
+                        value: "27°C",
+                        iconColor: Colors.red,
+                      ),
+                    ],
                   ),
                 ),
-            
-
-        
-
+              ),
             ],
           ),
         ),
