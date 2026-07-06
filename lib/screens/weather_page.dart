@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/weather_info_row.dart';
 import '../services/weather_service.dart';
 
 class WeatherPage extends StatefulWidget {
@@ -10,99 +9,80 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<WeatherPage> {
-@override
-void initState() {
-  super.initState();
+  final WeatherService weatherService = WeatherService();
 
-  WeatherService().getWeather();
-}
+  double? temperature;
+  String cityName = 'Toronto';
+  bool isLoading = true;
+  String? errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchWeather();
+  }
+
+  Future<void> fetchWeather() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = null;
+    });
+
+    try {
+      final data = await weatherService.getWeather(cityName);
+
+      setState(() {
+        temperature = data['main']['temp'];
+        cityName = data['name'];
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Could not load weather data.';
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    Widget content;
+
+    if (isLoading) {
+      content = const CircularProgressIndicator();
+    } else if (errorMessage != null) {
+      content = Text(
+        errorMessage!,
+        style: const TextStyle(fontSize: 18, color: Colors.red),
+      );
+    } else {
+      content = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            cityName,
+            style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            '${temperature?.round()}°C',
+            style: const TextStyle(fontSize: 56, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: fetchWeather,
+            child: const Text('Refresh'),
+          ),
+        ],
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Weather App'),
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              const Icon(
-                Icons.wb_sunny,
-                size: 100,
-                color: Colors.orange,
-              ),
-
-              const SizedBox(height: 20),
-
-              const Text(
-                "Toronto",
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              const Text(
-                "24°C",
-                style: TextStyle(
-                  fontSize: 52,
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              const Text(
-                "Partly Cloudy",
-                style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.grey,
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              Card(
-                elevation: 4,
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    children: const [
-                      WeatherInfoRow(
-                        icon: Icons.water_drop,
-                        title: "Humidity",
-                        value: "65%",
-                        iconColor: Colors.blue,
-                      ),
-
-                      SizedBox(height: 15),
-
-                      WeatherInfoRow(
-                        icon: Icons.air,
-                        title: "Wind",
-                        value: "18 km/h",
-                        iconColor: Colors.grey,
-                      ),
-
-                      SizedBox(height: 15),
-
-                      WeatherInfoRow(
-                        icon: Icons.thermostat,
-                        title: "Feels Like",
-                        value: "27°C",
-                        iconColor: Colors.red,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      body: Center(child: content),
     );
   }
 }

@@ -1,13 +1,20 @@
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class WeatherService {
-  Future<void> getWeather() async {
+  final String apiKey = 'YOUR_API_KEY_HERE';
+
+  Future<Map<String, dynamic>> getWeather(String city) async {
     final url = Uri.parse(
-      'https://api.open-meteo.com/v1/forecast?latitude=43.6532&longitude=-79.3832&current=temperature_2m,relative_humidity_2m,wind_speed_10m,apparent_temperature',
+      'https://api.openweathermap.org/data/2.5/weather?q=$city&appid=$apiKey&units=metric',
     );
 
     final response = await http.get(url);
 
-    print(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load weather data');
+    }
   }
 }
