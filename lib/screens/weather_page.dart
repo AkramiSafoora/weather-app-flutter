@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import '../services/weather_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/weather_bloc.dart';
+import '../bloc/weather_event.dart';
+import '../bloc/weather_state.dart';
 
 class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
@@ -9,26 +13,16 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<WeatherPage> {
-  final WeatherService weatherService = WeatherService();
-
   final TextEditingController cityController =
       TextEditingController(text: 'Toronto');
-
-  double? temperature;
-  double? feelsLike;
-  int? humidity;
-  double? windSpeed;
-  String cityName = 'Toronto';
-  String? weatherMain;
-  String? weatherDescription;
-
-  bool isLoading = true;
-  String? errorMessage;
 
   @override
   void initState() {
     super.initState();
-    fetchWeather();
+
+    context.read<WeatherBloc>().add(
+          SearchWeather('Toronto'),
+        );
   }
 
   @override
@@ -37,44 +31,7 @@ class _WeatherPageState extends State<WeatherPage> {
     super.dispose();
   }
 
-  Future<void> fetchWeather() async {
-    final city = cityController.text.trim();
-
-    if (city.isEmpty) {
-      setState(() {
-        errorMessage = 'Please enter a city name.';
-        isLoading = false;
-      });
-      return;
-    }
-
-    setState(() {
-      isLoading = true;
-      errorMessage = null;
-    });
-
-    try {
-      final data = await weatherService.getWeather(city);
-
-      setState(() {
-        temperature = data['main']['temp'];
-        feelsLike = data['main']['feels_like'];
-        humidity = data['main']['humidity'];
-        windSpeed = data['wind']['speed'];
-        cityName = data['name'];
-        weatherMain = data['weather'][0]['main'];
-        weatherDescription = data['weather'][0]['description'];
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        errorMessage = 'Could not load weather data.';
-        isLoading = false;
-      });
-    }
-  }
-
-  IconData getWeatherIcon() {
+  IconData getWeatherIcon(String weatherMain) {
     switch (weatherMain) {
       case 'Clear':
         return Icons.wb_sunny;
@@ -103,53 +60,18 @@ class _WeatherPageState extends State<WeatherPage> {
         .join(' ');
   }
 
+  void searchWeather() {
+    final city = cityController.text.trim();
+
+    if (city.isNotEmpty) {
+      context.read<WeatherBloc>().add(
+            SearchWeather(city),
+          );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    Widget content;
-
-    if (isLoading) {
-      content = const CircularProgressIndicator();
-    } else if (errorMessage != null) {
-      content = Text(
-        errorMessage!,
-        style: const TextStyle(fontSize: 18, color: Colors.red),
-      );
-    } else {
-      content = Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            getWeatherIcon(),
-            size: 90,
-          ),
-          const SizedBox(height: 20),
-          Text(
-            cityName,
-            style: const TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            '${temperature?.round()}°C',
-            style: const TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            formatDescription(weatherDescription ?? ''),
-            style: const TextStyle(fontSize: 22),
-          ),
-          const SizedBox(height: 30),
-          Text('Feels Like: ${feelsLike?.round()}°C'),
-          Text('Humidity: $humidity%'),
-          Text('Wind: ${windSpeed?.toStringAsFixed(1)} m/s'),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: fetchWeather,
-            child: const Text('Refresh'),
-          ),
-        ],
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Weather App'),
@@ -166,17 +88,99 @@ class _WeatherPageState extends State<WeatherPage> {
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.send),
-                  onPressed: fetchWeather,
+                  onPressed: searchWeather,
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
               ),
-              onSubmitted: (_) => fetchWeather(),
+              onSubmitted: (_) => searchWeather(),
             ),
           ),
+
           Expanded(
-            child: Center(child: content),
+            child: Center(
+              child: BlocBuilder<WeatherBloc, WeatherState>(
+                builder: (context, state) {
+                  if (state is WeatherLoading) {
+                    return const CircularProgressIndicator();
+                  }
+
+                  if (state is WeatherError) {
+                    return Text(
+                      state.message,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        color: Colors.red,
+                      ),
+                    );
+                  }
+
+                  if (state is WeatherLoaded) {
+                    final weather = state.weather;
+
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          getWeatherIcon(weather.weatherMain),
+                          size: 90,
+                        ),
+                        const SizedBox(height: 20),
+
+                        Text(
+                          weather.cityName,
+                          style: const TextStyle(
+                            fontSize: 34,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        Text(
+                          '${weather.temperature.round()}°C',
+                          style: const TextStyle(
+                            fontSize: 60,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        Text(
+                          formatDescription(
+                            weather.weatherDescription,
+                          ),
+                          style: const TextStyle(fontSize: 22),
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        Text(
+                          'Feels Like: ${weather.feelsLike.round()}°C',
+                        ),
+                        Text(
+                          'Humidity: ${weather.humidity}%',
+                        ),
+                        Text(
+                          'Wind: ${weather.windSpeed.toStringAsFixed(1)} m/s',
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        ElevatedButton(
+                          onPressed: searchWeather,
+                          child: const Text('Refresh'),
+                        ),
+                      ],
+                    );
+                  }
+
+                  return const Text('Search for a city');
+                },
+              ),
+            ),
           ),
         ],
       ),

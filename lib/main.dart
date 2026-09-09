@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'bloc/weather_bloc.dart';
+import 'services/weather_service.dart';
 import 'screens/weather_page.dart';
 
 void main() {
@@ -17,7 +21,12 @@ class WeatherApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home: const WeatherPage(),
+      home: BlocProvider(
+        create: (context) => WeatherBloc(
+          WeatherService(),
+        ),
+        child: const WeatherPage(),
+      ),
     );
   }
 }
