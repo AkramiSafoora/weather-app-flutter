@@ -1,6 +1,8 @@
 # 🌤️ Flutter Weather App
 
-A modern Flutter weather application that fetches real-time weather data using the OpenWeather API.
+A Flutter weather application that fetches real-time weather data using the OpenWeather API.
+
+The project uses the **BLoC pattern** for state management and separates the UI, business logic, data model, and API service responsibilities.
 
 ---
 
@@ -11,9 +13,9 @@ A modern Flutter weather application that fetches real-time weather data using t
 - Feels like temperature
 - Humidity
 - Wind speed
-- Weather condition
-- Weather icon
+- Weather condition and icon
 - Refresh weather data
+- Loading and error states
 
 ---
 
@@ -21,24 +23,72 @@ A modern Flutter weather application that fetches real-time weather data using t
 
 - Flutter
 - Dart
+- flutter_bloc
 - REST API
 - HTTP Package
 - OpenWeather API
+- JSON parsing
+- async/await
+
+---
+
+## 🧠 State Management
+
+The application uses the **BLoC (Business Logic Component) pattern** to separate UI from application logic.
+
+The main data flow is:
+
+```text
+User Action
+    ↓
+Event
+    ↓
+WeatherBloc
+    ↓
+WeatherService
+    ↓
+OpenWeather API
+    ↓
+Weather Model
+    ↓
+State
+    ↓
+BlocBuilder
+    ↓
+UI
+```
+
+### Events
+
+- `SearchWeather`
+
+### States
+
+- `WeatherInitial`
+- `WeatherLoading`
+- `WeatherLoaded`
+- `WeatherError`
 
 ---
 
 ## 📂 Project Structure
 
-```
+```text
 lib/
 │
+├── bloc/
+│   ├── weather_bloc.dart
+│   ├── weather_event.dart
+│   └── weather_state.dart
+│
 ├── models/
+│   └── weather.dart
 │
 ├── screens/
-│     weather_page.dart
+│   └── weather_page.dart
 │
 ├── services/
-│     weather_service.dart
+│   └── weather_service.dart
 │
 ├── widgets/
 │
@@ -49,13 +99,13 @@ lib/
 
 ## 🚀 Getting Started
 
-Clone the project
+Clone the repository:
 
 ```bash
 git clone https://github.com/AkramiSafoora/weather-app-flutter.git
 ```
 
-Install packages
+Install dependencies:
 
 ```bash
 flutter pub get
@@ -71,16 +121,22 @@ flutter run --dart-define=OPENWEATHER_API_KEY=YOUR_API_KEY
 
 ## 🔑 API Key
 
-This project does **not** include an API key.
+The API key is **not stored in the source code or repository**.
 
-Create a free API key from:
+Create an API key from OpenWeather:
 
 https://openweathermap.org/api
 
-Then run the app using:
+Then provide it at runtime:
 
 ```bash
 flutter run --dart-define=OPENWEATHER_API_KEY=YOUR_API_KEY
+```
+
+The application reads the key using:
+
+```dart
+String.fromEnvironment('OPENWEATHER_API_KEY')
 ```
 
 ---
@@ -95,5 +151,4 @@ Coming Soon
 
 **Safoora Akrami**
 
-GitHub:
-https://github.com/AkramiSafoora
+GitHub: https://github.com/AkramiSafoora
