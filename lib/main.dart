@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'bloc/weather_bloc.dart';
 import 'services/weather_service.dart';
-import 'screens/weather_page.dart';
+
+// Added: Router configuration
+import 'router.dart';
 
 void main() {
   runApp(const WeatherApp());
@@ -14,18 +16,18 @@ class WeatherApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Weather App',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
+    return BlocProvider(
+      create: (context) => WeatherBloc(
+        WeatherService(),
       ),
-      home: BlocProvider(
-        create: (context) => WeatherBloc(
-          WeatherService(),
+      child: MaterialApp.router(
+        title: 'Weather App',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          useMaterial3: true,
         ),
-        child: const WeatherPage(),
+        routerConfig: router,
       ),
     );
   }

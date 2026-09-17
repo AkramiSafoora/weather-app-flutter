@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// Added for navigation using GoRouter
+import 'package:go_router/go_router.dart';
+
 import '../bloc/weather_bloc.dart';
 import '../bloc/weather_event.dart';
 import '../bloc/weather_state.dart';
@@ -126,6 +129,7 @@ class _WeatherPageState extends State<WeatherPage> {
                           getWeatherIcon(weather.weatherMain),
                           size: 90,
                         ),
+
                         const SizedBox(height: 20),
 
                         Text(
@@ -152,7 +156,9 @@ class _WeatherPageState extends State<WeatherPage> {
                           formatDescription(
                             weather.weatherDescription,
                           ),
-                          style: const TextStyle(fontSize: 22),
+                          style: const TextStyle(
+                            fontSize: 22,
+                          ),
                         ),
 
                         const SizedBox(height: 30),
@@ -160,9 +166,11 @@ class _WeatherPageState extends State<WeatherPage> {
                         Text(
                           'Feels Like: ${weather.feelsLike.round()}°C',
                         ),
+
                         Text(
                           'Humidity: ${weather.humidity}%',
                         ),
+
                         Text(
                           'Wind: ${weather.windSpeed.toStringAsFixed(1)} m/s',
                         ),
@@ -172,6 +180,17 @@ class _WeatherPageState extends State<WeatherPage> {
                         ElevatedButton(
                           onPressed: searchWeather,
                           child: const Text('Refresh'),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        // Added: Navigate from WeatherPage to DetailPage
+                        // using GoRouter
+                        ElevatedButton(
+                          onPressed: () {
+                            context.push('/details');
+                          },
+                          child: const Text('View Details'),
                         ),
                       ],
                     );
