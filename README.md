@@ -2,20 +2,26 @@
 
 A Flutter weather application that fetches real-time weather data using the OpenWeather API.
 
-The project uses the **BLoC pattern** for state management and separates the UI, business logic, data model, and API service responsibilities.
+The project uses the **BLoC (Business Logic Component) pattern** for state management and separates the UI, business logic, data model, and API service responsibilities.
+
+The application has been tested on an **Android 15 emulator (API 35)**.
 
 ---
 
 ## 📱 Features
 
 - Search weather by city
-- Current temperature
-- Feels like temperature
-- Humidity
-- Wind speed
-- Weather condition and icon
+- Display current temperature
+- Display feels-like temperature
+- Display humidity
+- Display wind speed
+- Display weather condition and icon
 - Refresh weather data
 - Loading and error states
+- Navigation using GoRouter
+- Weather details screen
+- Passing weather data between screens
+- Custom back navigation
 
 ---
 
@@ -24,8 +30,9 @@ The project uses the **BLoC pattern** for state management and separates the UI,
 - Flutter
 - Dart
 - flutter_bloc
+- go_router
 - REST API
-- HTTP Package
+- HTTP package
 - OpenWeather API
 - JSON parsing
 - async/await
@@ -34,7 +41,7 @@ The project uses the **BLoC pattern** for state management and separates the UI,
 
 ## 🧠 State Management
 
-The application uses the **BLoC (Business Logic Component) pattern** to separate UI from application logic.
+The application uses the **BLoC (Business Logic Component) pattern** to separate the UI from application logic.
 
 The main data flow is:
 
@@ -71,45 +78,107 @@ UI
 
 ---
 
+## 🧭 Navigation
+
+The application uses **GoRouter** for navigation between screens.
+
+The app currently contains two main screens:
+
+- `WeatherPage` — displays the current weather information
+- `DetailPage` — displays additional weather details
+
+Navigation to the details screen is handled using:
+
+```dart
+context.push(
+  '/details',
+  extra: weather,
+);
+```
+
+The existing `Weather` object is passed to the details screen using `extra`, avoiding an unnecessary second API request.
+
+The data is received from `state.extra` and passed to `DetailPage`.
+
+Custom back navigation is implemented using:
+
+```dart
+context.pop();
+```
+
+---
+
 ## 📂 Project Structure
 
 ```text
-lib/
+weather_app/
 │
-├── bloc/
-│   ├── weather_bloc.dart
-│   ├── weather_event.dart
-│   └── weather_state.dart
+├── lib/
+│   │
+│   ├── bloc/
+│   │   ├── weather_bloc.dart
+│   │   ├── weather_event.dart
+│   │   └── weather_state.dart
+│   │
+│   ├── models/
+│   │   └── weather.dart
+│   │
+│   ├── screens/
+│   │   ├── weather_page.dart
+│   │   └── detail_page.dart
+│   │
+│   ├── services/
+│   │   └── weather_service.dart
+│   │
+│   ├── utils/
+│   │
+│   ├── widgets/
+│   │
+│   ├── main.dart
+│   └── router.dart
 │
-├── models/
-│   └── weather.dart
+├── screenshots/
+│   ├── weather_screen.png
+│   └── detail_screen.png
 │
-├── screens/
-│   └── weather_page.dart
-│
-├── services/
-│   └── weather_service.dart
-│
-├── widgets/
-│
-└── main.dart
+├── test/
+├── pubspec.yaml
+└── README.md
 ```
 
 ---
 
 ## 🚀 Getting Started
 
-Clone the repository:
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/AkramiSafoora/weather-app-flutter.git
 ```
 
-Install dependencies:
+### 2. Navigate to the project
+
+```bash
+cd weather-app-flutter
+```
+
+### 3. Install dependencies
 
 ```bash
 flutter pub get
 ```
+
+### 4. Start an Android emulator
+
+Make sure an Android emulator is running.
+
+You can check available devices using:
+
+```bash
+flutter devices
+```
+
+### 5. Run the application
 
 Run the application using your own OpenWeather API key:
 
@@ -121,13 +190,9 @@ flutter run --dart-define=OPENWEATHER_API_KEY=YOUR_API_KEY
 
 ## 🔑 API Key
 
-The API key is **not stored in the source code or repository**.
+The OpenWeather API key is **not stored in the source code or repository**.
 
-Create an API key from OpenWeather:
-
-https://openweathermap.org/api
-
-Then provide it at runtime:
+Create your own OpenWeather API key and provide it at runtime using:
 
 ```bash
 flutter run --dart-define=OPENWEATHER_API_KEY=YOUR_API_KEY
@@ -139,11 +204,19 @@ The application reads the key using:
 String.fromEnvironment('OPENWEATHER_API_KEY')
 ```
 
+This keeps the API key out of the source code and GitHub repository.
+
 ---
 
 ## 📸 Screenshots
 
-Coming Soon
+### Weather Screen
+
+<img src="screenshots/weather_screen.png" width="300" alt="Weather Screen">
+
+### Weather Details
+
+<img src="screenshots/detail_screen.png" width="300" alt="Weather Details Screen">
 
 ---
 
@@ -151,4 +224,4 @@ Coming Soon
 
 **Safoora Akrami**
 
-GitHub: https://github.com/AkramiSafoora
+GitHub: AkramiSafoora
