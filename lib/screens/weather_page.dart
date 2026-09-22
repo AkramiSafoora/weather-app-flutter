@@ -188,7 +188,8 @@ class _WeatherPageState extends State<WeatherPage> {
                         // using GoRouter
                         ElevatedButton(
                           onPressed: () {
-                            context.push('/details');
+                            context.push('/details',
+                                extra: weather,);
                           },
                           child: const Text('View Details'),
                         ),

@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 
 import 'screens/weather_page.dart';
 import 'screens/detail_page.dart';
+import 'models/weather.dart';
 
 // Added: Defines the navigation routes for the app
 final GoRouter router = GoRouter(
@@ -12,7 +13,10 @@ final GoRouter router = GoRouter(
     ),
     GoRoute(
       path: '/details',
-      builder: (context, state) => const DetailPage(),
+      builder: (context, state) {
+        final weather = state.extra as Weather;
+        return DetailPage( weather : weather,);
+      },
     ),
   ],
 );
