@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../models/weather.dart';
 
@@ -64,6 +65,18 @@ class DetailPage extends StatelessWidget {
             Text(
               'Description: ${weather.weatherDescription}',
               style: const TextStyle(fontSize: 20),
+            ),
+
+
+            const SizedBox(height: 40),
+            // Added: Back button to navigate back to WeatherPage
+            Center(
+              child : ElevatedButton(
+              onPressed: () {
+                context.pop();
+              },
+              child: const Text('Back to weather page'),
+              ),
             ),
           ],
         ),
